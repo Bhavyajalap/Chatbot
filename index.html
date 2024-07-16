@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* Basic styling for the chat window */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .user-message {
+            background-color: #f0f0f0;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            word-wrap: break-word;
+            max-width: 70%;
+            align-self: flex-end;
+        }
+        .assistant-message {
+            background-color: #eff8fb;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            word-wrap: break-word;
+            max-width: 70%;
+            align-self: flex-start;
+        }
+        .message-input {
+            width: calc(100% - 60px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+            font-size: 14px;
+        }
+        .send-button {
+            width: 60px;
+            height: 40px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .send-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Additional Colors */
+        .user-message.orange {
+            background-color: #f9c586;
+            color: #5e3e0e;
+        }
+        .assistant-message.orange {
+            background-color: #fdebd3;
+            color: #7f4e18;
+        }
+        .user-message.green {
+            background-color: #d1f4e3;
+            color: #0e553b;
+        }
+        .assistant-message.green {
+            background-color: #e8f8f5;
+            color: #2c786c;
+        }
+        .user-message.purple {
+            background-color: #d8c5e0;
+            color: #4a2955;
+        }
+        .assistant-message.purple {
+            background-color: #f0e9f4;
+            color: #6e4b7c;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+        <form id="chat-form">
+            <input type="text" id="user-input" class="message-input" placeholder="Type your message...">
+            <button type="submit" class="send-button">Send</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const userMessage = userInput.value.trim();
+                if (userMessage === '') return;
+                appendUserMessage(userMessage);
+                fetchChatResponse(userMessage);
+                userInput.value = '';
+            });
+
+            function appendUserMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('user-message');
+                messageElement.textContent = message;
+                if (message.toLowerCase().includes('strategic')) {
+                    messageElement.classList.add('orange');
+                } else if (message.toLowerCase().includes('digital')) {
+                    messageElement.classList.add('green');
+                } else if (message.toLowerCase().includes('business')) {
+                    messageElement.classList.add('purple');
+                }
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function appendAssistantMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('assistant-message');
+                messageElement.textContent = message;
+                if (message.toLowerCase().includes('strategic')) {
+                    messageElement.classList.add('orange');
+                } else if (message.toLowerCase().includes('digital')) {
+                    messageElement.classList.add('green');
+                } else if (message.toLowerCase().includes('business')) {
+                    messageElement.classList.add('purple');
+                }
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            async function fetchChatResponse(message) {
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: message })
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch response');
+                    }
+                    const data = await response.json();
+                    const assistantMessage = data.response;
+                    appendAssistantMessage(assistantMessage);
+                } catch (error) {
+                    console.error('Error:', error);
+                    appendAssistantMessage('Sorry, something went wrong.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
