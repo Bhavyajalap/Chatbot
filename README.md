@@ -1,6 +1,7 @@
 # Chatbot
-this is the customize chatbot for dataset build using flask.
+This is the customize chatbot for dataset build using flask.
 Directory
+
 chatbot
   |__ app.py
   |__ templates
