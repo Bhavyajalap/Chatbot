@@ -8,6 +8,5 @@ chatbot
   |__ app.py
 
   |__ templates
-  
           |__ index.html
           
