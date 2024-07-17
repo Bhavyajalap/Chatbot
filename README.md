@@ -1,7 +1,7 @@
 # Chatbot
-This is the customize chatbot for dataset build using flask.
+This is the chatbot for the customize dataset using flask.
 
-Directory
+Directory Representation
 
 chatbot
 
